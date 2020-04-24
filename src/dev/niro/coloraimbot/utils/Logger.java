@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat.utils;
+package dev.niro.coloraimbot.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

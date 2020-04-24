@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat.utils;
+package dev.niro.coloraimbot.utils;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;

@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat;
+package dev.niro.coloraimbot;
 
 import java.awt.Color;
 import java.awt.MouseInfo;
@@ -14,10 +14,10 @@ import org.jnativehook.NativeHookException;
 
 import com.sun.jna.platform.win32.WinDef.HWND;
 
-import dev.niro.valorantcheat.gui.Frame;
-import dev.niro.valorantcheat.listener.GlobalMouseListener;
-import dev.niro.valorantcheat.utils.Logger;
-import dev.niro.valorantcheat.utils.MakeScreenshot;
+import dev.niro.coloraimbot.gui.Frame;
+import dev.niro.coloraimbot.listener.GlobalMouseListener;
+import dev.niro.coloraimbot.utils.Logger;
+import dev.niro.coloraimbot.utils.MakeScreenshot;
 
 public class Main {
 		

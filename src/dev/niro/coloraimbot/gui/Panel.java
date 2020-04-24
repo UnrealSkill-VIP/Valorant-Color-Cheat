@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat.gui;
+package dev.niro.coloraimbot.gui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import dev.niro.valorantcheat.Main;
+import dev.niro.coloraimbot.Main;
 
 
 public class Panel extends JPanel {
