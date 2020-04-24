@@ -1,9 +1,9 @@
-package dev.niro.coloraimbot.listener;
+package dev.niro.valorantcheat.listener;
 
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
-import dev.niro.coloraimbot.Main;
+import dev.niro.valorantcheat.Main;
 
 public class GlobalMouseListener implements NativeMouseInputListener {
 	
