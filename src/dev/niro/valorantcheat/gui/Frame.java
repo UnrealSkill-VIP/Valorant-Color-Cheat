@@ -9,6 +9,7 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.RECT;
 
 import dev.niro.valorantcheat.Main;
+import dev.niro.valorantcheat.utils.Logger;
 
 public class Frame extends JFrame {
 
@@ -95,7 +96,7 @@ public class Frame extends JFrame {
 						Thread.sleep(1000);
 					}
 				} catch (InterruptedException e) {
-					System.err.println("Frame reposition thread crashed!");
+					Logger.err("Frame reposition thread crashed!");
 					e.printStackTrace();
 				}
 			}

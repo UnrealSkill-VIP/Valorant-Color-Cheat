@@ -21,6 +21,7 @@ import dev.niro.valorantcheat.utils.MakeScreenshot;
 
 public class Main {
 		
+	// This are the options
 	public static float fovWidth = 0.3f;
 	public static float fovHeight = 0.3f;	
 	public static float moveSpeed = 0.12f;
@@ -34,9 +35,9 @@ public class Main {
 	public static int reviseTime = 500;
 	public static boolean debug = false;
 	
-	public static Robot robot;
-	public static Frame gui;
 	
+	public static Robot robot;
+	public static Frame gui;	
 	public static int tps = 0;
 	public static int cpuTime = 0;
 	public static boolean working = false;
@@ -48,6 +49,7 @@ public class Main {
 	public static Rectangle entityFrame;
 	public static HWND hwnd;
 	public static boolean focusHead = false;
+	
 	
 	public static void main(String[] args) {
 		try {
@@ -95,7 +97,6 @@ public class Main {
 	
 	public static void init() throws Exception {
 		gui = new Frame("VALORANT  ");
-		//gui = new Frame("Filme & TV");
 		
 		try {
 			LogManager.getLogManager().reset();
@@ -126,6 +127,7 @@ public class Main {
 		int right = -1;
 		int bottom = -1;
 
+		// Taking Screenshot
 		//Normal:
 		BufferedImage image = MakeScreenshot.capture(hwnd, fov);
 		//Other:
@@ -135,7 +137,8 @@ public class Main {
 		
 		if(image == null)
 			return;
-				
+			
+		// Pixel search algorithm
 		boolean canSnipe = false;
 		int inColorPixelCount = 0;
 		for (int i = 0; i < image.getWidth(); i += 1) {
@@ -217,8 +220,8 @@ public class Main {
 			return;
 		}
 		
-		float pixelQuote = (float)inColorPixelCount / (width * height);
-		
+		// Is it really a player?
+		float pixelQuote = (float)inColorPixelCount / (width * height);		
 		if(height < 10 || width < 10 
 				|| (int)width / height > 2 
 				|| pixelQuote < 0.004
@@ -228,34 +231,30 @@ public class Main {
 			aimTo = null;			
 			return;
 		}
-		
-		//Logger.log(Math.round(pixelQuote * 1000) / 1000.0 + " = " + inColorPixelCount);
-				
+						
+		// TODO: Aim after 1s on body
 		boolean head = true;
 		if(System.currentTimeMillis() - lastShot < 1000)
 			head = false;
-		/* Aims too fast on body
-		if(inFire)
-			head = false;
-		*/
 		
+		// How high should the aimbot aim?
 		float aimHeight = 0.4f;
-
 		if((double)width / height < 0.32)
 			head = false;
 		if(head)
-			aimHeight = 0.22f * width / height;
-		
+			aimHeight = 0.22f * width / height;		
 		if(aimHeight > 0.5)
 			aimHeight = 0.5f;
 		focusHead = head; 
 		
+		// Recoil calculation
 		int recoil = (int) ((System.currentTimeMillis() - lastShot) / 30);
 		if(!inFire)
 			recoil = 0;
 		if(recoil > 50)
 			recoil = 50;
 		
+		// Calculate mouse move distance
 		float aimToX = left + width / 2;
 		float aimToY = top + height * aimHeight + recoil;	
 		float moveX = Math.round((aimToX - fov.getWidth() / 2) * moveSpeed);

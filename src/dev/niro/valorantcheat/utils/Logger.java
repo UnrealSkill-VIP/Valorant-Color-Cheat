@@ -9,7 +9,7 @@ public class Logger {
 		System.out.println(getCurrentTimeStamp() + text);
 	}
 	
-	public static void err(String text) {
+	public static void err(Object text) {
 		System.err.println(getCurrentTimeStamp() + text);
 	}
 	

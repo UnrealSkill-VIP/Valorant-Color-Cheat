@@ -23,6 +23,8 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
 
 public class MakeScreenshot {
 
+	// Making Screenshot with JNA
+	
 	private static final DirectColorModel SCREENSHOT_COLOR_MODEL = new DirectColorModel(24, 0x00FF0000, 0xFF00, 0xFF);
 	private static final int[] SCREENSHOT_BAND_MASKS = {
 	        SCREENSHOT_COLOR_MODEL.getRedMask(),

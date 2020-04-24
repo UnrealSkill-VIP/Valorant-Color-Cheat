@@ -7,6 +7,7 @@ import dev.niro.valorantcheat.Main;
 
 public class GlobalMouseListener implements NativeMouseInputListener {
 	
+	
 	@Override
 	public void nativeMouseClicked(NativeMouseEvent e) {
 		// TODO Auto-generated method stub
