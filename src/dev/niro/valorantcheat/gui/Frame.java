@@ -1,4 +1,4 @@
-package dev.niro.coloraimbot.gui;
+package dev.niro.valorantcheat.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.RECT;
 
-import dev.niro.coloraimbot.Main;
+import dev.niro.valorantcheat.Main;
 
 public class Frame extends JFrame {
 
