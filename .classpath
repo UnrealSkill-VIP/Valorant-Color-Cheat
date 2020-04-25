@@ -5,5 +5,13 @@
 	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/jna-platform-5.2.0.jar"/>
 	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/jna-5.2.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.base.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.media.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx.web.jar"/>
+	<classpathentry kind="lib" path="D:/Dokumente/Java Libraries/JavaFX/javafx-swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

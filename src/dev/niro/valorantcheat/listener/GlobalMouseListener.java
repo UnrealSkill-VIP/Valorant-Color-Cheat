@@ -25,7 +25,7 @@ public class GlobalMouseListener implements NativeMouseInputListener {
 		if(e.getButton() == 1) {
 			Main.lastShot = System.currentTimeMillis();
 			Main.inFire = true;
-			Main.inVisirSince = System.currentTimeMillis() + Main.reviseTime;
+			Main.inVisirSince = (long) (System.currentTimeMillis() + Main.reviseTime);
 		}
 	}
 

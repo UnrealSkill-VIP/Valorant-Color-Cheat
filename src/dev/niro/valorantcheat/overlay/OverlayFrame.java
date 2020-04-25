@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat.gui;
+package dev.niro.valorantcheat.overlay;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,13 +11,13 @@ import com.sun.jna.platform.win32.WinDef.RECT;
 import dev.niro.valorantcheat.Main;
 import dev.niro.valorantcheat.utils.Logger;
 
-public class Frame extends JFrame {
+public class OverlayFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	Panel panel;
+	OverlayPanel panel;
 	String taskName;
 	
-	public Frame(String title) {		
+	public OverlayFrame(String title) {		
 		super(title + " Overlay");
 		
 		taskName = title;
@@ -38,7 +38,7 @@ public class Frame extends JFrame {
         setFocusableWindowState(false);
         getRootPane().putClientProperty("apple.awt.draggableWindowBackground", false);
 
-        panel = new Panel(this);
+        panel = new OverlayPanel(this);
         add(panel);
         pack();
 	}

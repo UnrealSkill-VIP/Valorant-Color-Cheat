@@ -10,34 +10,33 @@ import java.awt.image.BufferedImage;
 import java.util.logging.LogManager;
 
 import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 
 import com.sun.jna.platform.win32.WinDef.HWND;
 
-import dev.niro.valorantcheat.gui.Frame;
+import dev.niro.valorantcheat.gui.GuiFrame;
 import dev.niro.valorantcheat.listener.GlobalMouseListener;
+import dev.niro.valorantcheat.overlay.OverlayFrame;
 import dev.niro.valorantcheat.utils.Logger;
 import dev.niro.valorantcheat.utils.MakeScreenshot;
+import javafx.application.Application;
 
 public class Main {
 		
-	// This are the options
 	public static float fovWidth = 0.3f;
 	public static float fovHeight = 0.3f;	
 	public static float moveSpeed = 0.12f;
-	public static int nextPixelRangeX = 30;
-	public static int nextPixelRangeY = 30;
 	public static int maxTps = 100;
-	public static boolean aimbot = true;
+	public static boolean aimbot = false;
 	public static boolean triggerbot = false;
-	public static boolean sniper = true;
-	public static int visirTime = 300;
-	public static int reviseTime = 500;
+	public static boolean sniper = false;
+	public static float visirTime = 300;
+	public static float reviseTime = 500;
+	public static float recoilSpeed = 0.033f;
+	public static float maxRecoil = 50;
 	public static boolean debug = false;
-	
-	
+		
 	public static Robot robot;
-	public static Frame gui;	
+	public static OverlayFrame overlay;	
 	public static int tps = 0;
 	public static int cpuTime = 0;
 	public static boolean working = false;
@@ -50,71 +49,73 @@ public class Main {
 	public static HWND hwnd;
 	public static boolean focusHead = false;
 	
-	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
+		new Thread(new Runnable() {			
+			@Override
+			public void run() {
+				int tpsTemp = 0;
+				long tpsTime = System.currentTimeMillis();
+				long sleepOffest = 0;
+				long sleepTime = System.nanoTime();
+				while(true) {			
+					long time = System.currentTimeMillis();
+					try {
+						tick();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					cpuTime = (int) (System.currentTimeMillis() - time);
+								
+					try {
+						int toSleep = (int) (1_000.0 / maxTps - sleepOffest / 1_000_000);
+						if(toSleep > 0)
+							Thread.sleep(toSleep);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
+					sleepOffest -= 1_000_000_000.0 / maxTps;
+					sleepOffest += System.nanoTime() - sleepTime;
+					sleepTime = System.nanoTime();
+					if(sleepOffest > 10_000_000)
+						sleepOffest = 10_000_000;
+					
+					tpsTemp++;
+					if(System.currentTimeMillis() - tpsTime > 1000) {
+						tps = tpsTemp;
+						tpsTemp = 0;
+						tpsTime = System.currentTimeMillis();
+					}
+				}
+			}
+		}).start();
+		
 		try {
-			init();
+			init(args);
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		}
-		Logger.log("Program initialized!");
-		
-		int tpsTemp = 0;
-		long tpsTime = System.currentTimeMillis();
-		long sleepOffest = 0;
-		long sleepTime = System.nanoTime();
-		while(true) {			
-			long time = System.currentTimeMillis();
-			try {
-				tick();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			cpuTime = (int) (System.currentTimeMillis() - time);
-						
-			try {
-				int toSleep = (int) (1_000.0 / maxTps - sleepOffest / 1_000_000);
-				if(toSleep > 0)
-					Thread.sleep(toSleep);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			sleepOffest -= 1_000_000_000.0 / maxTps;
-			sleepOffest += System.nanoTime() - sleepTime;
-			sleepTime = System.nanoTime();
-			if(sleepOffest > 10_000_000)
-				sleepOffest = 10_000_000;
-			
-			tpsTemp++;
-			if(System.currentTimeMillis() - tpsTime > 1000) {
-				tps = tpsTemp;
-				tpsTemp = 0;
-				tpsTime = System.currentTimeMillis();
-			}
+			System.exit(1);
 		}
 	}
 	
-	public static void init() throws Exception {
-		gui = new Frame("VALORANT  ");
+	public static void init(String[] args) throws Exception {
+		overlay = new OverlayFrame("VALORANT  ");
 		
-		try {
-			LogManager.getLogManager().reset();
-			GlobalScreen.registerNativeHook();			
-			GlobalScreen.addNativeMouseListener(new GlobalMouseListener());
-		} catch (NativeHookException e) {
-			e.printStackTrace();
-		}
+		LogManager.getLogManager().reset();
+		GlobalScreen.registerNativeHook();			
+		GlobalScreen.addNativeMouseListener(new GlobalMouseListener());
 				
 		updateSettings();
 		robot = new Robot();
+		
+		Application.launch(GuiFrame.class, args);
 	}
 	
 	public static void updateSettings() {
-		int fovWidthPx = (int) (gui.getWidth() * fovWidth);
-		int fovHeightPx = (int) (gui.getHeight() * fovHeight);
-		fov = new Rectangle((int)(gui.getWidth() / 2 - fovWidthPx / 2), 
-				(int) (gui.getHeight() / 2 - fovHeightPx / 2), fovWidthPx, fovHeightPx);
+		int fovWidthPx = (int) (overlay.getWidth() * fovWidth);
+		int fovHeightPx = (int) (overlay.getHeight() * fovHeight);
+		fov = new Rectangle((int)(overlay.getWidth() / 2 - fovWidthPx / 2), 
+				(int) (overlay.getHeight() / 2 - fovHeightPx / 2), fovWidthPx, fovHeightPx);
 	}
 
 	public static BufferedImage debugImage;
@@ -144,9 +145,9 @@ public class Main {
 		for (int i = 0; i < image.getWidth(); i += 1) {
 			int x = image.getWidth() / 2 + (i % 2 == 0 ? -1 : 1) * (int)Math.floor(i / 2);
 			
-			if(x - nextPixelRangeX > right && right != -1)
+			if(x - 30 > right && right != -1)
 				continue;
-			if(x + nextPixelRangeX < left && left != -1)
+			if(x + 30 < left && left != -1)
 				continue;
 			if(right - left > (bottom - top) * 2
 					&& bottom - top > 10 && right - left > 10)
@@ -160,14 +161,15 @@ public class Main {
 				short blue  =  (short) (clr & 0x000000ff);
 				float colorBrightness = Color.RGBtoHSB(red, green, blue, null)[1];			
 				
+				// Scanning for the red dot in the sniper scope
 				if(i <= 6 && red > 196 && green < 45 && blue < 36
 						&& Math.abs(image.getHeight() / 2 - y) <= 6) {
 					canSnipe = true;
 				}
 						
-				if(y - nextPixelRangeY > bottom && bottom != -1 && i > 3)
+				if(y - 30 > bottom && bottom != -1 && i > 3)
 					break;
-				if(y + nextPixelRangeY < top && top != -1 && i > 3)
+				if(y + 30 < top && top != -1 && i > 3)
 					continue;
 				
 				double colorScale = 1;
@@ -232,54 +234,60 @@ public class Main {
 			return;
 		}
 						
-		// TODO: Aim after 1s on body
 		boolean head = true;
-		if(System.currentTimeMillis() - lastShot < 1000)
+		if(System.currentTimeMillis() - lastShot > 500 && inFire)
+			head = false;
+		if((double)width / height < 0.31)
 			head = false;
 		
-		// How high should the aimbot aim?
-		float aimHeight = 0.4f;
-		if((double)width / height < 0.32)
-			head = false;
+		// How high should the aimbot aim? 
+		float aimHeight = 0.4f * height;		
 		if(head)
-			aimHeight = 0.22f * width / height;		
-		if(aimHeight > 0.5)
-			aimHeight = 0.5f;
+			aimHeight = 0.22f * width;		
+		if(aimHeight > height / 2)
+			aimHeight = height / 2;
 		focusHead = head; 
 		
 		// Recoil calculation
-		int recoil = (int) ((System.currentTimeMillis() - lastShot) / 30);
+		float recoil = (int) ((System.currentTimeMillis() - lastShot) * recoilSpeed);
 		if(!inFire)
 			recoil = 0;
-		if(recoil > 50)
-			recoil = 50;
-		
+		if(recoil > maxRecoil)
+			recoil = maxRecoil;
+						
 		// Calculate mouse move distance
 		float aimToX = left + width / 2;
-		float aimToY = top + height * aimHeight + recoil;	
+		float aimToY = top + aimHeight + recoil;	
 		float moveX = Math.round((aimToX - fov.getWidth() / 2) * moveSpeed);
 		float moveY = Math.round((aimToY - fov.getHeight() / 2) * moveSpeed);
 				
-		if(working) {
-			if(aimbot && (Math.abs(moveX) >= 2 || Math.abs(moveY) >= 2)) {
-				robot.mouseMove((int) (MouseInfo.getPointerInfo().getLocation().getX() + moveX),
-						(int) (MouseInfo.getPointerInfo().getLocation().getY() + moveY));
-			} 
-						
-			boolean inVisir = System.currentTimeMillis() - inVisirSince > visirTime;
-			boolean overPlayer = Math.abs(aimToX - fov.getWidth() / 2) <= 15
-					&& aimToY - fov.getHeight() / 2 <= 40 && aimToY - fov.getHeight() / 2 >= -15;
-			if(triggerbot && overPlayer 
-					&& ((inVisir && canSnipe) || !sniper)) {
-				robot.mousePress(InputEvent.BUTTON1_MASK);
-				robot.delay(10);
-				robot.mouseRelease(InputEvent.BUTTON1_MASK);
-				lastShot = System.currentTimeMillis();
-				inVisirSince = System.currentTimeMillis() + reviseTime;
-			}
-		}			
-
 		entityFrame = new Rectangle(left, top, width, height);
 		aimTo = new Point((int)aimToX, (int)aimToY);
+		
+		if(!working) 
+			return;
+		
+		if(aimbot && (Math.abs(moveX) >= 2 || Math.abs(moveY) >= 2)) {
+			robot.mouseMove((int) (MouseInfo.getPointerInfo().getLocation().getX() + moveX),
+					(int) (MouseInfo.getPointerInfo().getLocation().getY() + moveY));
+		} 
+					
+		boolean inVisir = System.currentTimeMillis() - inVisirSince > visirTime;
+		boolean overPlayer = true;
+		if(Math.abs(aimToX - fov.getWidth() / 2) > (head ? 15 : 30))
+			overPlayer = false;
+		if(aimToY - fov.getHeight() / 2 < -40)
+			overPlayer = false;
+		if(aimToY - fov.getHeight() / 2 > (head ? 10 : 30))
+			overPlayer = false;
+		
+		if(triggerbot && overPlayer 
+				&& ((inVisir && canSnipe) || !sniper)) {
+			robot.mousePress(InputEvent.BUTTON1_MASK);
+			robot.delay(10);
+			robot.mouseRelease(InputEvent.BUTTON1_MASK);
+			lastShot = System.currentTimeMillis();
+			inVisirSince = (long) (System.currentTimeMillis() + reviseTime);
+		}
 	}
 }
