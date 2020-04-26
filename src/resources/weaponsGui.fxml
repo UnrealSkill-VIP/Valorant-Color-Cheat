@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="500.0" spacing="20.0" style="-fx-background-color: #dedede;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.niro.valorantcheat.gui.weapons.WeaponGuiController">
+   <children>
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pistols" />
+            <Button fx:id="b1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="DWNED" VBox.vgrow="ALWAYS">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b2" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="SHORTY">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b3" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="FRENZY">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b4" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="GHOST">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b5" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="SHERIFF">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="12.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SMGS" />
+            <Button fx:id="b6" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="STINGER">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b7" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="SPECTRE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Shotguns" />
+            <Button fx:id="b8" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="BUCKY">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b9" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="JUDGE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="19.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rifles" />
+            <Button fx:id="b10" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="BULLDOG">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b11" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="GUARDIAN">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b12" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="PHANTOM">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b13" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="VANDAL">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </VBox>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="12.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sniper" />
+            <Button fx:id="b14" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="MARSHAL">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b15" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="OPERATOR">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Heavy" />
+            <Button fx:id="b16" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="ARES">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="b17" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #49F;" text="ODIN">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</HBox>

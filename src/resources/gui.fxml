@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,16 +16,35 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="800.0" style="-fx-background-color: #dedede;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.niro.valorantcheat.gui.GuiController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="700.0" style="-fx-background-color: #dedede;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.niro.valorantcheat.gui.GuiController">
    <children>
-      <ImageView fx:id="bgImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="0.0">
+      <ImageView fx:id="bgImage" fitHeight="250.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@bg.jpg" />
+            <Image url="@/resources/bg.jpg" />
          </image>
       </ImageView>
-      <HBox fx:id="contentBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Text fx:id="name" fill="WHITE" layoutX="573.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 12;" text="VALORANT Cheat" AnchorPane.bottomAnchor="-2.0" AnchorPane.rightAnchor="0.0">
+         <rotationAxis>
+            <Point3D />
+         </rotationAxis>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <DropShadow color="#000000ec" height="7.5" radius="4.34" spread="1.0" width="11.86" />
+         </effect>
+      </Text>
+      <Text fx:id="credit" fill="WHITE" layoutX="583.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 12;" text="by NiroDev" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="0.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <DropShadow color="#000000ec" height="7.5" radius="4.34" spread="1.0" width="11.86" />
+         </effect>
+      </Text>
+      <HBox fx:id="contentBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="660.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox fx:id="content1" fillWidth="true" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="250.0" spacing="10.0">
+            <VBox fx:id="content1" fillWidth="true" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" style="-fx-font-family: Tahoma;" text="General">
                      <VBox.margin>
@@ -36,33 +57,33 @@
                   <CheckBox fx:id="debug" mnemonicParsing="false" text="Debug" />
                   <AnchorPane>
                      <children>
-                        <TextField fx:id="fovW" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="30%" text="30%" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="fovW" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="30%" text="30%" AnchorPane.rightAnchor="0.0" />
                         <Label text="FOV Width" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane>
                      <children>
                         <Label text="FOV Height" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="fovH" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="30%" text="30%" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="fovH" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="30%" text="30%" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane>
                      <children>
                         <Label text="Max TPS" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="maxTPS" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="100" text="100" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="maxTPS" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="100" text="100" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <Button fx:id="exitButton" cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #FF0000; -fx-text-fill: #FFFFFF;" text="Exit" textAlignment="JUSTIFY" textOverrun="CLIP" VBox.vgrow="ALWAYS">
+                  <Button fx:id="exitButton" cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: #F44; -fx-text-fill: #FFFFFF;" text="Exit" textAlignment="JUSTIFY" textOverrun="CLIP" VBox.vgrow="ALWAYS">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
                </children>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                </padding>
             </VBox>
-            <VBox fx:id="content2" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="250.0" spacing="10.0">
+            <VBox fx:id="content2" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" style="-fx-font-family: Tahoma;" text="Aimbot">
                      <VBox.margin>
@@ -77,27 +98,32 @@
                   <AnchorPane>
                      <children>
                         <Label text="Move Speed" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="moveSpeed" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="12" text="12" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="moveSpeed" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="12" text="12" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane>
                      <children>
                         <Label text="Recoil Speed" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="recoilSpeed" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="33" text="33" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="recoilSpeed" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="33" text="33" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane>
                      <children>
                         <Label text="Max Recoil" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="maxRecoil" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="50" text="50" AnchorPane.rightAnchor="0.0" />
+                        <TextField fx:id="maxRecoil" layoutX="68.0" prefHeight="26.0" prefWidth="80.0" promptText="50" text="50" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
+                  <Button fx:id="loadConfig" maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-text-fill: #FFFFFF; -fx-background-color: #48F;" text="Load Weapon Config" textAlignment="JUSTIFY" textOverrun="CLIP">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                </padding>
             </VBox>
-            <VBox fx:id="content3" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="250.0" spacing="10.0">
+            <VBox fx:id="content3" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" style="-fx-font-family: Tahoma;" text="Triggerbot">
                      <VBox.margin>
@@ -110,21 +136,21 @@
                   </Rectangle>
                   <CheckBox fx:id="triggerbot" mnemonicParsing="false" text="Enabled" />
                   <CheckBox fx:id="sniper" mnemonicParsing="false" text="Sniper" />
-                  <AnchorPane>
-                     <children>
-                        <Label text="Scope Time" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="scopeTime" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="300" text="300" AnchorPane.rightAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane>
-                     <children>
-                        <Label text="Revise Time" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="4.0" />
-                        <TextField fx:id="reviseTime" layoutX="68.0" prefHeight="26.0" prefWidth="100.0" promptText="500" text="500" AnchorPane.rightAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
+                  <Text strokeType="OUTSIDE" style="-fx-font-family: Tahoma;" text="Look">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Rectangle fx:id="seperator4" arcHeight="5.0" arcWidth="5.0" height="3.0" stroke="BLACK" strokeLineJoin="ROUND" strokeType="INSIDE" width="50.0">
+                     <VBox.margin>
+                        <Insets left="-10.0" />
+                     </VBox.margin>
+                  </Rectangle>
+                  <CheckBox fx:id="esp" mnemonicParsing="false" text="ESP" />
+                  <CheckBox fx:id="fov" mnemonicParsing="false" text="FOV Rect" />
                </children>
                <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                </padding>
             </VBox>
          </children>

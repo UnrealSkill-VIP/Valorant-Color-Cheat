@@ -1,7 +1,11 @@
 package dev.niro.valorantcheat.gui;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
 
 import dev.niro.valorantcheat.Main;
 import dev.niro.valorantcheat.utils.Logger;
@@ -15,10 +19,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class GuiController implements Initializable {
 
@@ -40,6 +46,8 @@ public class GuiController implements Initializable {
 	Rectangle seperator2;
 	@FXML
 	Rectangle seperator3;
+	@FXML
+	Rectangle seperator4;
 	
 	@FXML
 	CheckBox debug;
@@ -49,6 +57,10 @@ public class GuiController implements Initializable {
 	CheckBox triggerbot;
 	@FXML
 	CheckBox sniper;
+	@FXML
+	CheckBox esp;
+	@FXML
+	CheckBox fov;
 	
 	@FXML
 	TextField fovW;
@@ -62,16 +74,23 @@ public class GuiController implements Initializable {
 	TextField recoilSpeed;
 	@FXML
 	TextField maxRecoil;
-	@FXML
-	TextField scopeTime;
-	@FXML
-	TextField reviseTime;
 	
 	@FXML
 	Button exitButton;
+	@FXML
+	Button loadConfig;
+	
+	@FXML 
+	Text name;
+	@FXML 
+	Text credit;
+	
+	GuiFrame gui;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		name.setText(name.getText() + " " + Main.VERSION);
+		
 		contentBox.prefWidthProperty().bind(mainPane.widthProperty().subtract(mainPane.heightProperty().multiply(bgImage.getImage().getWidth() / bgImage.getImage().getHeight())));
 		contentBox.prefHeightProperty().bind(mainPane.heightProperty());
 		
@@ -85,6 +104,7 @@ public class GuiController implements Initializable {
 		seperator1.widthProperty().bind(content1.widthProperty().subtract(20));
 		seperator2.widthProperty().bind(content2.widthProperty().subtract(20));
 		seperator3.widthProperty().bind(content3.widthProperty().subtract(20));
+		seperator4.widthProperty().bind(content3.widthProperty().subtract(20));
 		
 		exitButton.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -92,6 +112,36 @@ public class GuiController implements Initializable {
 		    	Logger.log("Program exit.");
 		    	System.exit(0);
 		    }
+		});
+		loadConfig.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override 
+		    public void handle(ActionEvent e) {
+		    	try {
+					gui.weaponGui();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+		    }
+		});
+		name.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URI("https://niro.dev"));
+				} catch (IOException | URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		credit.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URI("https://niro.dev"));
+				} catch (IOException | URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
 		});
 		
 		debug.setOnAction(new EventHandler<ActionEvent>() {
@@ -114,6 +164,16 @@ public class GuiController implements Initializable {
 		    	Main.sniper = ((CheckBox)e.getSource()).isSelected();
 		    }
 		});
+		esp.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		    	Main.esp = ((CheckBox)e.getSource()).isSelected();
+		    }
+		});
+		fov.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		    	Main.fovRect = ((CheckBox)e.getSource()).isSelected();
+		    }
+		});
 		
 		ChangeListener<? super String> textFieldListener = (observable, oldValue, newValue) -> {
 			TextField tf = null;
@@ -129,17 +189,13 @@ public class GuiController implements Initializable {
 				tf = recoilSpeed;
 			else if(observable == maxRecoil.textProperty()) 
 				tf = maxRecoil;
-			else if(observable == scopeTime.textProperty()) 
-				tf = scopeTime;
-			else if(observable == reviseTime.textProperty()) 
-				tf = reviseTime;
 			
 			tf.setText(newValue.replaceAll("[^0-9.]", "") + (tf == fovH || tf == fovW ? "%" : ""));
 			
-			float value = 0;
+			double value = 0;
 			try {
 				if(newValue.length() > 0)
-					value = Float.valueOf(newValue.replaceAll("[^0-9.]", ""));
+					value = Double.valueOf(newValue.replaceAll("[^0-9.]", ""));
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
@@ -157,10 +213,6 @@ public class GuiController implements Initializable {
 				Main.recoilSpeed = value / 1000;
 			else if(tf == maxRecoil) 
 				Main.maxRecoil = value;
-			else if(tf == scopeTime) 
-				Main.visirTime = value;
-			else if(tf == reviseTime) 
-				Main.reviseTime = value;
 			
 			Main.updateSettings();
 		};
@@ -171,7 +223,31 @@ public class GuiController implements Initializable {
 		moveSpeed.textProperty().addListener(textFieldListener);
 		recoilSpeed.textProperty().addListener(textFieldListener);
 		maxRecoil.textProperty().addListener(textFieldListener);
-		scopeTime.textProperty().addListener(textFieldListener);
-		reviseTime.textProperty().addListener(textFieldListener);
+		
+		reloadGui();
+	}
+	
+	public void reloadGui() {
+		debug.setSelected(Main.debug);
+		aimbot.setSelected(Main.aimbot);
+		triggerbot.setSelected(Main.triggerbot);
+		sniper.setSelected(Main.sniper);
+		esp.setSelected(Main.esp);
+		fov.setSelected(Main.fovRect);
+		
+		fovW.setText(String.valueOf(Main.fovWidth * 100) + "%");
+		fovH.setText(String.valueOf(Main.fovHeight * 100) + "%");
+		maxTPS.setText(String.valueOf(Main.maxTps));
+		moveSpeed.setText(String.valueOf(Main.moveSpeed * 100));
+		recoilSpeed.setText(String.valueOf(Main.recoilSpeed * 1000));
+		maxRecoil.setText(String.valueOf(Main.maxRecoil));
+	}
+
+	public GuiFrame getGui() {
+		return gui;
+	}
+
+	public void setGui(GuiFrame gui) {
+		this.gui = gui;
 	}    
 }
