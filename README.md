@@ -13,6 +13,10 @@ How to use:
 5. Start the Jar File -> Ready to use (A gui is opened)
 6. Read Tips for better Settings
 
+Find Keycode:
+1. Go to https://github.com/kwhat/jnativehook/blob/2.1/src/java/org/jnativehook/keyboard/NativeKeyEvent.java and find the key you want to use.
+2. Get the Hexnumber and convert it do decimal. How? https://lmgtfy.com/?q=hex+to+decimal+converter
+
 Tips:
 - Do not set foc too high, the cheat will have a high reaction time. (Active Debug to see your CPU time/tps, you should hava over ~30 TPS)
 - Set max TPS not under you FPS Limit, it will lag.
