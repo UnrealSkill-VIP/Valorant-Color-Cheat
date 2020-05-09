@@ -1,5 +1,7 @@
 package dev.niro.valorantcheat.listener;
 
+import java.util.Map.Entry;
+
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
@@ -26,8 +28,15 @@ public class GlobalMouseListener implements NativeMouseInputListener {
 	
 	@Override
 	public void nativeMousePressed(NativeMouseEvent e) {
-		if(e.getButton() == 2 || e.getButton() == 5)
-			Main.working = true;
+		for(Entry<Integer, Boolean> entry : Main.keys.entrySet()) {
+			if(e.getButton() == entry.getKey().intValue()) {
+				if(entry.getValue()) {
+					Main.working = true;
+				} else {
+					Main.working = !Main.working;
+				}
+			}
+		}
 				
 		if(e.getButton() == 1) {
 			if(System.currentTimeMillis() - lastClick > 500)
@@ -39,8 +48,13 @@ public class GlobalMouseListener implements NativeMouseInputListener {
 
 	@Override
 	public void nativeMouseReleased(NativeMouseEvent e) {
-		if(e.getButton() == 2 || e.getButton() == 5)
-			Main.working = false;
+		for(Entry<Integer, Boolean> entry : Main.keys.entrySet()) {
+			if(e.getButton() == entry.getKey().intValue()) {
+				if(entry.getValue()) {
+					Main.working = false;
+				} 
+			}
+		}
 				
 		if(e.getButton() == 1) {
 			holdM1 = false;

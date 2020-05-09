@@ -24,6 +24,9 @@ public class OverlayPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        if(Main.fov == null)
+        	return;
+        
         Graphics2D g2 = (Graphics2D) g;
                 
         if(Main.fovRect) {

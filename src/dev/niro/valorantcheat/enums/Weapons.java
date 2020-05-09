@@ -1,4 +1,4 @@
-package dev.niro.valorantcheat;
+package dev.niro.valorantcheat.enums;
 
 public enum Weapons {
 

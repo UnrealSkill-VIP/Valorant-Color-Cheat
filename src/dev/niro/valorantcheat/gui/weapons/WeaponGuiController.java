@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import dev.niro.valorantcheat.Main;
-import dev.niro.valorantcheat.Weapons;
+import dev.niro.valorantcheat.enums.Weapons;
 import dev.niro.valorantcheat.gui.GuiFrame;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

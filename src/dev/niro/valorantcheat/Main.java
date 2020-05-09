@@ -1,33 +1,43 @@
 package dev.niro.valorantcheat;
 
 import java.awt.Color;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.HashMap;
 import java.util.logging.LogManager;
 
+import org.apache.commons.io.FileUtils;
 import org.jnativehook.GlobalScreen;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.mouse.NativeMouseEvent;
 
 import com.sun.jna.platform.win32.WinDef.HWND;
 
+import dev.niro.valorantcheat.enums.AimbotMode;
 import dev.niro.valorantcheat.gui.GuiFrame;
 import dev.niro.valorantcheat.gui.debug.DebugFrame;
+import dev.niro.valorantcheat.listener.GlobalKeyboardListener;
 import dev.niro.valorantcheat.listener.GlobalMouseListener;
 import dev.niro.valorantcheat.overlay.OverlayFrame;
+import dev.niro.valorantcheat.utils.Logger;
 import dev.niro.valorantcheat.utils.MakeScreenshot;
+import dev.niro.valorantcheat.utils.VersionCheck;
 import javafx.application.Application;
+import mousemoveinjection.MouseMoveManager;
+import net.sf.jni4net.Bridge;
 
 public class Main {
 		
-	public static String VERSION = "v1";
+	public static String VERSION = "v2";
 	
 	public static double fovWidth = 0.3;
 	public static double fovHeight = 0.3;	
-	public static double moveSpeed = 0.18;
-	public static int maxTps = 60;
+	public static double moveSpeed = 0.12;
+	public static int maxTps = 100;
 	public static boolean aimbot = true;
 	public static boolean triggerbot = false;
 	public static boolean sniper = false;
@@ -36,7 +46,12 @@ public class Main {
 	public static boolean debug = false;
 	public static boolean esp = true;
 	public static boolean fovRect = true;
-		
+	public static double antiShake = 0.005;
+	public static int triggerDelay = 10;
+	public static double triggerPrefire = 5;
+	public static AimbotMode aimMode = AimbotMode.Auto;
+	public static HashMap<Integer, Boolean> keys = new HashMap<>();
+	
 	public static Robot robot;
 	public static OverlayFrame overlay;	
 	public static DebugFrame debugGui;
@@ -49,71 +64,132 @@ public class Main {
 	public static Rectangle entityFrame;
 	public static HWND hwnd;
 	public static boolean focusHead = false;
+	public static long lastTrigger = 0;
 	
-	public static void main(String[] args) {		
-		new Thread(new Runnable() {			
-			@Override
-			public void run() {
-				int tpsTemp = 0;
-				long tpsTime = System.currentTimeMillis();
-				long sleepOffest = 0;
-				long sleepTime = System.nanoTime();
-				while(true) {			
-					long time = System.currentTimeMillis();
-					try {
-						tick();
-					} catch (Exception e) {
-						e.printStackTrace();
+	public static void main(String[] args) {	
+		Logger.log("Starting Valorant Cheat " + VERSION + " by NiroDev");
+		try {
+			VersionCheck.check();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		new Thread(() -> {
+			try {
+				init(args);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				System.exit(1);
+			}
+			
+			Logger.log("Engine started!");
+			
+			int tpsTemp = 0;
+			long tpsTime = System.currentTimeMillis();
+			long sleepOffest = 0;
+			long sleepTime = System.nanoTime();
+			while(true) {			
+				long time = System.currentTimeMillis();
+				try {
+					tick();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				cpuTime = (int) (System.currentTimeMillis() - time);
+							
+				try {
+					int toSleep = (int) (1_000.0 / maxTps - sleepOffest / 1_000_000);
+					if(toSleep > 100) {
+						toSleep = 100; 
+						sleepOffest = 0;
 					}
-					cpuTime = (int) (System.currentTimeMillis() - time);
-								
-					try {
-						int toSleep = (int) (1_000.0 / maxTps - sleepOffest / 1_000_000);
-						if(toSleep > 0)
-							Thread.sleep(toSleep);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					
-					sleepOffest -= 1_000_000_000.0 / maxTps;
-					sleepOffest += System.nanoTime() - sleepTime;
-					sleepTime = System.nanoTime();
-					if(sleepOffest > 10_000_000)
-						sleepOffest = 10_000_000;
-					
-					tpsTemp++;
-					if(System.currentTimeMillis() - tpsTime > 250) {
-						tps = tpsTemp * 4;
-						tpsTemp = 0;
-						tpsTime = System.currentTimeMillis();
-					}
+					if(toSleep > 0)
+						Thread.sleep(toSleep);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				sleepOffest -= 1_000_000_000.0 / maxTps;
+				sleepOffest += System.nanoTime() - sleepTime;
+				sleepTime = System.nanoTime();
+				if(sleepOffest > 10_000_000)
+					sleepOffest = 10_000_000;
+				
+				tpsTemp++;
+				if(System.currentTimeMillis() - tpsTime > 250) {
+					tps = tpsTemp * 4;
+					tpsTemp = 0;
+					tpsTime = System.currentTimeMillis();
 				}
 			}
 		}).start();
 		
-		try {
-			init(args);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
+		Application.launch(GuiFrame.class, args);
 	}
 	
 	public static void init(String[] args) throws Exception {
+		keys.put(NativeKeyEvent.VC_ALT, true);
+		keys.put(NativeMouseEvent.BUTTON5, true);
+		
 		overlay = new OverlayFrame("VALORANT  ");
 		debugGui = new DebugFrame();
+		robot = new Robot();
+		
+		loadDLLs();
 		
 		LogManager.getLogManager().reset();
 		GlobalScreen.registerNativeHook();			
 		GlobalScreen.addNativeMouseListener(new GlobalMouseListener());
+		GlobalScreen.addNativeKeyListener(new GlobalKeyboardListener());
 				
 		updateSettings();
-		robot = new Robot();
+	}
+	
+	public static void loadDLLs() throws Exception {
+		//Bridge.setVerbose(true);
+		File tempPath = new File(System.getenv("APPDATA") + "/NiroDevValorantCheat/");
 		
-		Application.launch(GuiFrame.class, args);
+		String[] exportDlls = new String[] {"jni4net.n.w32.v20-0.8.8.0.dll", "jni4net.n.w32.v40-0.8.8.0.dll", "jni4net.n.w64.v20-0.8.8.0.dll", "jni4net.n.w64.v40-0.8.8.0.dll", 
+				"jni4net.n-0.8.8.0.dll", "MouseMoveHandler.j4n.dll", "MouseMoveHandler.dll"};		
+		for(String dll : exportDlls) {
+			File temp = new File(tempPath.getAbsolutePath() + "/" + dll);
+			if(Main.class.getResourceAsStream("/" + dll) == null) {
+				Logger.err("Can not extract \"" + dll + "\". ResourceStream = null");
+				continue;
+			}
+			temp.getParentFile().mkdirs();
+			if(!temp.exists()) {
+				FileUtils.copyInputStreamToFile(Main.class.getResourceAsStream("/" + dll), temp);
+				Logger.log("Extracted Library " + dll + " to " + temp.getAbsolutePath());
+			} else {
+				Logger.log("Library " + dll + " already extracted.");
+			}
+			temp.deleteOnExit();
+		}
+		
+		Bridge.init(tempPath);				
+		
+		String[] loadDlls = new String[] {"jni4net.n-0.8.8.0.dll", "MouseMoveHandler.j4n.dll"};
+		for(String dll : loadDlls) {
+			File temp = new File(tempPath.getAbsolutePath() + "/" + dll);
+			if(temp.exists()) {
+				Bridge.LoadAndRegisterAssemblyFrom(temp);
+				Logger.log("Loaded Library " + dll + " successfully.");
+			}
+		}
+		
+		try {
+			MouseMoveManager.moveMouse(1, 1);
+		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+			System.exit(2);
+		}
 	}
 	
 	public static void updateSettings() {
+		if(overlay == null) 
+			return;
+		
 		int fovWidthPx = (int) (overlay.getWidth() * fovWidth);
 		int fovHeightPx = (int) (overlay.getHeight() * fovHeight);
 		if(fovWidthPx < 1)
@@ -241,10 +317,14 @@ public class Main {
 		}
 						
 		boolean head = true;
-		if(shootingSince != -1 && System.currentTimeMillis() - shootingSince > 500)
+		if(aimMode == AimbotMode.Auto) {
+			if(shootingSince != -1 && System.currentTimeMillis() - shootingSince > 500)
+				head = false;
+			if((double)width / height < 0.31)
+				head = false;
+		} else if(aimMode == AimbotMode.Body) {
 			head = false;
-		if((double)width / height < 0.31)
-			head = false;
+		}
 		
 		// How high should the aimbot aim? 
 		double aimHeight = 0.4f * height;		
@@ -264,35 +344,47 @@ public class Main {
 		// Calculate mouse move distance
 		double aimToX = left + width / 2;
 		double aimToY = top + aimHeight + recoil;	
-		double moveX = (double) Math.ceil((aimToX - fov.getWidth() / 2) * moveSpeed);
-		double moveY = (double) Math.ceil((aimToY - fov.getHeight() / 2) * moveSpeed);
-				
+		double moveX = (aimToX - fov.getWidth() / 2) * moveSpeed;
+		double moveY = (aimToY - fov.getHeight() / 2) * moveSpeed;				
+		double antiShakeValue = (double)(Math.abs(moveX) + Math.abs(moveY)) / (width + height);
+		moveX = Math.round(moveX);
+		moveY = Math.round(moveY);
+		
 		entityFrame = new Rectangle(left, top, width, height);
 		aimTo = new Point((int)aimToX, (int)aimToY);
 		
-		if(!working) {
-			return;
-		}
+		if(!working) 
+			return;		
 		
-		if(aimbot 
-				&& (Math.abs(aimToX - fov.getWidth() / 2) >= 3 || Math.abs(aimToY - fov.getHeight() / 2) >= 3)) {
-			robot.mouseMove((int) (MouseInfo.getPointerInfo().getLocation().getX() + moveX),
-					(int) (MouseInfo.getPointerInfo().getLocation().getY() + moveY));
-		} 
-					
+		if(aimbot && antiShakeValue >= antiShake) {
+			try {
+				MouseMoveManager.moveMouse((int)moveX, (int)moveY);
+			} catch (Exception e) {
+				Logger.err("Can not move mouse.");
+				e.printStackTrace();
+			}
+		}				
+			
 		boolean overPlayer = true;
-		if(Math.abs(aimToX - fov.getWidth() / 2) > (head ? (sniper ? 10 : 20) : 30))
+		if(Math.abs(aimToX - fov.getWidth() / 2) > (head ? (sniper ? 5 + triggerPrefire : 15 + triggerPrefire) : 25 + triggerPrefire))
 			overPlayer = false;
-		if(aimToY - fov.getHeight() / 2 < -40)
+		if(aimToY - fov.getHeight() / 2 < -35 - triggerPrefire)
 			overPlayer = false;
-		if(aimToY - fov.getHeight() / 2 > (head ? (sniper ? 3 : 15) : 30))
+		if(aimToY - fov.getHeight() / 2 > (head ? (sniper ? triggerPrefire : 10 + triggerPrefire) : 25 + triggerPrefire))
 			overPlayer = false;
 				
+		if(sniper && (fov.getHeight() / 2 > bottom || fov.getHeight() / 2 < top || fov.getWidth() / 2 > right || fov.getWidth() / 2 < left))
+			overPlayer = false;
+		
 		if(triggerbot && overPlayer 
-				&& (canSnipe || !sniper)) {
-			robot.mousePress(InputEvent.BUTTON1_MASK);
-			robot.delay(10);
-			robot.mouseRelease(InputEvent.BUTTON1_MASK);
+				&& (canSnipe || !sniper)
+				&& System.currentTimeMillis() - lastTrigger > triggerDelay) {
+			new Thread(() -> {
+				robot.mousePress(InputEvent.BUTTON1_MASK);
+				robot.delay(5);
+				robot.mouseRelease(InputEvent.BUTTON1_MASK);
+			}).start();			
+			lastTrigger = System.currentTimeMillis();
 		} 
 	}
 }

@@ -4,9 +4,11 @@ package dev.niro.valorantcheat.gui;
 import java.io.IOException;
 
 import dev.niro.valorantcheat.Main;
+import dev.niro.valorantcheat.gui.key.KeyGuiController;
 import dev.niro.valorantcheat.gui.weapons.WeaponGuiController;
 import dev.niro.valorantcheat.utils.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 
 public class GuiFrame extends Application {
@@ -38,7 +41,6 @@ public class GuiFrame extends Application {
 		controller.setGui(this);
 		stage.setScene(new Scene(main));
 				
-		stage.setHeight(220);
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.getIcons().add(new Image("/resources/icon.png"));
 		
@@ -56,11 +58,19 @@ public class GuiFrame extends Application {
                 stage.setY(event.getScreenY() + yOffset);
             }
         });
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent we) {
+				Logger.log("Program exit.");
+		    	Platform.exit();
+		    	System.exit(0);
+		    }
+		});
 		
 		stage.show();
+		controller.reloadHeight();
 		stage.centerOnScreen();
 		
-		Logger.log("Program started!");
+		Logger.log("Gui started!");
 	}
 	
 	Stage weaponStage;
@@ -77,6 +87,11 @@ public class GuiFrame extends Application {
         weaponStage.setScene(new Scene(root));
         weaponStage.setResizable(false);
         weaponStage.show();
+        weaponStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+            	weaponFinished();
+            }
+        });
 	}
 	
 	public void weaponFinished() {
@@ -87,5 +102,29 @@ public class GuiFrame extends Application {
 		weaponStage = null;
 		controller.reloadGui();
 	}
-
+	
+	Stage keyStage;
+	public void keyGui() throws IOException {
+		if(keyStage != null) 
+			weaponFinished();
+		FXMLLoader fxmlLoader = new FXMLLoader(); 
+		Parent root = fxmlLoader.load(Main.class.getResource("/resources/keySettingsGui.fxml").openStream());
+		KeyGuiController controller = fxmlLoader.getController();
+		controller.setGui(this);
+		keyStage = new Stage();
+		keyStage.getIcons().add(new Image("/resources/icon.png"));
+		keyStage.setTitle("Key Settings");
+		keyStage.setScene(new Scene(root));
+        keyStage.show();
+        keyStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+            	if(weaponStage == null)
+        			return;
+        		
+            	keyStage.close();
+            	keyStage = null;
+            }
+        });
+	}
+	
 }
