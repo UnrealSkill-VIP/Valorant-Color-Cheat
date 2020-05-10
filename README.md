@@ -18,7 +18,7 @@ Find Keycode:
 2. Get the Hexnumber and convert it do decimal. How? https://lmgtfy.com/?q=hex+to+decimal+converter
 
 Tips:
-- Do not set foc too high, the cheat will have a high reaction time. (Active Debug to see your CPU time/tps, you should hava over ~30 TPS)
+- Do not set fov too high, the cheat will have a high reaction time. (Active Debug to see your CPU time/tps, you should hava over ~30 TPS)
 - Set max TPS not under you FPS Limit, it will lag.
 - Click "Load Weapon Config" and select your weapon at weapon change, for optimal settings.
 - Use Triggerbot only in combination with Aimbot.
