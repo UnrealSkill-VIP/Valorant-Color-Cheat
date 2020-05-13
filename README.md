@@ -1,4 +1,4 @@
-# Valorant Color Cheat
+# Valorant Color Cheat - Fixed / Detected
 Valorant - The new CSGO/Overwatch Game from Riot Games.
 Aimbot and Triggerbot programmed in Java. Detecting players on screen by color scanning & filter algorithms. 
 Without access to memory → Nearly 100% Undetectable. 
