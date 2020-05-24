@@ -30,7 +30,7 @@ iT iS NoT wOrKiNG!!1!?
 - Nothing is happening: https://lmgtfy.com/?q=jar+file+not+starting - Try to start it with CMD/Batch.
 - Aimbot/Triggerbot not working: Read "How to use".
 - It is crashing: Start it with Batch and look for errors - Send it to me. Tutorial: https://lmgtfy.com/?q=start+jar+with+batch
-- Some Bugs or errors? Write a ticket at Issues or contact me on Discord (NiroDev#7076).
+- Some Bugs or errors? Write a ticket at Issues.
 
 Requirement:
 - Java 8
