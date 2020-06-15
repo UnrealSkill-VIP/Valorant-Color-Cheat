@@ -1,4 +1,8 @@
 # Valorant Color Cheat - Fixed / Detected
+#'''''''''''''''''''''''''''''''' /\
+#'''''''''''''''''''''''''''''''' ||
+#'''''''''''''''''''''''''''''''' ||
+
 Valorant - The new CSGO/Overwatch Game from Riot Games.
 Aimbot and Triggerbot programmed in Java. Detecting players on screen by color scanning & filter algorithms. 
 Without access to memory.
@@ -26,6 +30,7 @@ Tips:
 - The Mouse Speed setting is scaling with you mouse sensity, so you need to find your perfect settings by yourself.
 
 iT iS NoT wOrKiNG!!1!?
+- Because it is only working up to Valorant version 0.49
 - Check the Requirements.
 - Nothing is happening: https://lmgtfy.com/?q=jar+file+not+starting - Try to start it with CMD/Batch.
 - Aimbot/Triggerbot not working: Read "How to use".
